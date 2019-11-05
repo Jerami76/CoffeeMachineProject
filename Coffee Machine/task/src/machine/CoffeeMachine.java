@@ -16,13 +16,13 @@ public class CoffeeMachine {
         this.water = 400;
         this.beans = 120;
         this.milk = 540;
-        this.cups = 9;
+        this.cups = 4;
         this.cash = 550;
         this.powerOn = true;
         this.userInput =new Scanner(System.in);
     }
 
-    public enum FillPromptState {
+    public enum FillPromptState {  //Should probably change this to a String[]
         WATER_FILL_PROMPT("ml of water"),
         MILK_FILL_PROMPT("ml of milk"),
         BEANS_FILL_PROMPT("grams of coffee beans"),
@@ -33,8 +33,12 @@ public class CoffeeMachine {
         }
     }
 
+    //Should implement MachineState next
 //    public enum MachineState {
-//
+//        STANDBY,
+//        BUY,
+//        BREW,
+//        FILL,
 //    }
 
 
@@ -57,11 +61,11 @@ public class CoffeeMachine {
                     System.out.printf("Write how many %s do you want to add: ",fillPromptState[i].fillPromptVar);
                     fillAmounts[i] = userInput.nextInt();
                 }
-                fillMachine(fillAmounts[0],fillAmounts[1],fillAmounts[2],fillAmounts[3]);
+                updateSupplies(fillAmounts[0],fillAmounts[1],fillAmounts[2],fillAmounts[3]);
                 break;
             case "take":
                 System.out.println("I gave you $" + this.cash);
-                this.cash = 0;
+                updateSupplies();
                 break;
             case "remaining":
                 printStatus();
@@ -82,6 +86,7 @@ public class CoffeeMachine {
         int milkReqd = 0;
         int beansReqd = 0;
         int price = 0;
+        int cupsReqd = 1;
         switch(coffeeType){
             case "1"://espresso
                 waterReqd = 250;
@@ -100,6 +105,9 @@ public class CoffeeMachine {
                 beansReqd= 12;
                 price = 6;
                 break;
+            case "4":
+                cupsReqd = 4;
+                break;
             case "back":
                 return;
         }
@@ -109,23 +117,30 @@ public class CoffeeMachine {
             System.out.println("Sorry, not enough milk!");
         }  else if (beansReqd>beans) {
             System.out.println("Sorry, not enough beans!");
-        } else if (cups==0) {
+        } else if (this.cups<1) {
             System.out.println("Sorry, not enough cups!");
         } else {
             System.out.println("I have enough resources, making you a coffee!");
-            water-=waterReqd;
-            milk-=milkReqd;
-            beans-=beansReqd;
-            cups--;
-            cash+=price;
+            updateSupplies(waterReqd,milkReqd,beansReqd,cupsReqd,price);
         }
     }
 
-    private void fillMachine(int addWater,int addMilk,int addBeans,int addCups) {
-        water += addWater;
-        milk += addMilk;
-        beans += addBeans;
-        cups += addCups;
+    /* updateSupplies() will handle all variable updates and is overloaded to be reused depending on the number of arguments sent */
+    private void updateSupplies(int water,int milk,int beans,int cups) {
+        this.water += water;
+        this.milk += milk;
+        this.beans += beans;
+        this.cups += cups;
+    }
+    private void updateSupplies(int water,int milk,int beans,int cups, int cash) {
+        this.water -= water;
+        this.milk -= milk;
+        this.beans -= beans;
+        this.cups -= cups;
+        this.cash += cash;
+    }
+    private void updateSupplies() {
+        this.cash = 0;
     }
 
     public static void main(String[] args) {
