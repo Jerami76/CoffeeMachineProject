@@ -26,13 +26,13 @@ public class CoffeeMachine {
 
     private boolean userInteract(){ //All user input handled here
         System.out.print("Write action (buy, fill, take, remaining, exit): ");
-        String command = userInput.next();
+        String command = this.userInput.next();
         switch (command) {
             case "buy":
                 System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu: ");
-                if(userInput.hasNextInt()){
-                    int coffeeType = userInput.nextInt();
-                    buyCoffee(coffeeType);
+                if(this.userInput.hasNextInt()){
+                    int coffeeType = this.userInput.nextInt();
+                    this.buyCoffee(coffeeType);
                     break;
                 }
                 break;
@@ -41,26 +41,22 @@ public class CoffeeMachine {
                 int[] fillAmounts = new int[4];
                 for(int i=0; i <4; i++){
                     System.out.printf("Write how many %s do you want to add: ",fillPrompts[i]);
-                    fillAmounts[i] = userInput.nextInt();
+                    fillAmounts[i] = this.userInput.nextInt();
                 }
-                updateSupplies(fillAmounts[0],fillAmounts[1],fillAmounts[2],fillAmounts[3]);
+                this.updateSupplies(fillAmounts[0],fillAmounts[1],fillAmounts[2],fillAmounts[3]);
                 break;
             case "take":
                 System.out.println("I gave you $" + this.cash);
-                updateSupplies();
+                this.updateSupplies();
                 break;
             case "remaining":
-                printStatus();
+                this.printStatus();
                 break;
             case "exit": //close scanner and set powerOn to false
-                userInput.close();
+                this.userInput.close();
                 return false;
         }
         return true; //Continue running userInteract()
-    }
-
-    private void printStatus() {
-        System.out.printf("%nThe coffee machine has:%n%d of water%n%d of milk%n%d of coffee beans%n%d of disposable cups%n%d of money%n%n",water, milk, beans, cups, cash);
     }
 
     private void buyCoffee(int coffeeType) {
@@ -89,24 +85,13 @@ public class CoffeeMachine {
                 break;
         }
         //Guard clauses instead of if else
-        if(waterReqd>water) {
-            System.out.println("Sorry, not enough water!");
-            return;
-        }
-        if (milkReqd>milk) {
-            System.out.println("Sorry, not enough milk!");
-            return;
-        }
-        if (beansReqd>beans) {
-            System.out.println("Sorry, not enough beans!");
-            return;
-        }
-        if (this.cups<1) {
-            System.out.println("Sorry, not enough cups!");
-            return;
-        }
+        if (waterReqd>water) {System.out.println("Sorry, not enough water!"); return;}
+        if (milkReqd>milk) {System.out.println("Sorry, not enough milk!"); return;}
+        if (beansReqd>beans) {System.out.println("Sorry, not enough beans!"); return;}
+        if (cups<1) {System.out.println("Sorry, not enough cups!"); return;}
+
         System.out.println("I have enough resources, making you a coffee!");
-        updateSupplies(waterReqd, milkReqd, beansReqd, cupsReqd, price);
+        this.updateSupplies(waterReqd, milkReqd, beansReqd, cupsReqd, price);
 
     }
 
@@ -128,13 +113,15 @@ public class CoffeeMachine {
         this.cash = 0;
     }
 
+    private void printStatus() {
+        System.out.printf("%nThe coffee machine has:%n%d of water%n%d of milk%n%d of coffee beans%n%d of disposable cups%n%d of money%n%n",this.water, this.milk, this.beans, this.cups, this.cash);
+    }
+
     public static void main(String[] args) {
         CoffeeMachine breakRoomMachine = new CoffeeMachine();
-        CoffeeMachine testMachine = new CoffeeMachine();//This object is here to compare variables for testing purposes
+        //CoffeeMachine testMachine = new CoffeeMachine(); This object is here to compare variables for testing purposes
        do {
             breakRoomMachine.powerOn = breakRoomMachine.userInteract();
             }  while(breakRoomMachine.powerOn);
        }
-
-
 }
