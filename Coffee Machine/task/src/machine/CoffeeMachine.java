@@ -85,10 +85,10 @@ public class CoffeeMachine {
                 break;
         }
         //Guard clauses instead of if else
-        if (waterReqd>water) {System.out.println("Sorry, not enough water!"); return;}
-        if (milkReqd>milk) {System.out.println("Sorry, not enough milk!"); return;}
-        if (beansReqd>beans) {System.out.println("Sorry, not enough beans!"); return;}
-        if (cups<1) {System.out.println("Sorry, not enough cups!"); return;}
+        if (waterReqd>this.water) {System.out.println("Sorry, not enough water!"); return;}
+        if (milkReqd>this.milk) {System.out.println("Sorry, not enough milk!"); return;}
+        if (beansReqd>this.beans) {System.out.println("Sorry, not enough beans!"); return;}
+        if (this.cups<1) {System.out.println("Sorry, not enough cups!"); return;}
 
         System.out.println("I have enough resources, making you a coffee!");
         this.updateSupplies(waterReqd, milkReqd, beansReqd, cupsReqd, price);
